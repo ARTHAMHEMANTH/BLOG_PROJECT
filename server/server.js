@@ -23,10 +23,10 @@ let isConnected = false;
 const connectDB = async () => {
     if (isConnected) return;
 
-    const uri = process.env.MONGO_URI;
+    const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
     if (!uri) {
-        console.error('CRITICAL: MONGO_URI is not defined');
-        throw new Error('MONGO_URI is missing in Vercel environment variables');
+        console.error('CRITICAL: Database URI is not defined (checked MONGO_URI and MONGODB_URI)');
+        throw new Error('Database connection string is missing in environment variables');
     }
 
     // Mask URI for logs: mongodb+srv://user:****@cluster...
