@@ -43,12 +43,18 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(userData));
             return { success: true };
         } catch (error) {
+            console.error("Login component error details:", error);
             const serverMsg = error.response?.data?.msg;
             const detail = error.response?.data?.error;
-            return {
-                success: false,
-                message: detail ? `${serverMsg}: ${detail}` : (serverMsg || 'Login failed')
-            };
+            const status = error.response?.status;
+
+            let finalMessage = 'Login failed';
+            if (detail) finalMessage = `${serverMsg}: ${detail}`;
+            else if (serverMsg) finalMessage = serverMsg;
+            else if (status) finalMessage = `Error ${status}: ${error.response?.statusText || 'Server Error'}`;
+            else if (error.message) finalMessage = `Network Error: ${error.message}`;
+
+            return { success: false, message: finalMessage };
         }
     };
 
@@ -64,12 +70,18 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(userData));
             return { success: true };
         } catch (error) {
+            console.error("Signup component error details:", error);
             const serverMsg = error.response?.data?.msg;
             const detail = error.response?.data?.error;
-            return {
-                success: false,
-                message: detail ? `${serverMsg}: ${detail}` : (serverMsg || 'Signup failed')
-            };
+            const status = error.response?.status;
+
+            let finalMessage = 'Signup failed';
+            if (detail) finalMessage = `${serverMsg}: ${detail}`;
+            else if (serverMsg) finalMessage = serverMsg;
+            else if (status) finalMessage = `Error ${status}: ${error.response?.statusText || 'Server Error'}`;
+            else if (error.message) finalMessage = `Network Error: ${error.message}`;
+
+            return { success: false, message: finalMessage };
         }
     };
 
