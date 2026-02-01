@@ -33,8 +33,13 @@ const connectDB = async () => {
 
 // Routes Middleware to ensure DB connection
 app.use(async (req, res, next) => {
-    await connectDB();
-    next();
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error("DB Middleware Error:", err);
+        res.status(500).json({ msg: 'Database connection failed', error: err.message });
+    }
 });
 
 // Routes
