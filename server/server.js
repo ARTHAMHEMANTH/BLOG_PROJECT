@@ -22,16 +22,24 @@ app.use((req, res, next) => {
 let isConnected = false;
 const connectDB = async () => {
     if (isConnected) return;
-    if (!process.env.MONGO_URI) {
-        throw new Error('MONGO_URI is not defined in environment variables');
+
+    const uri = process.env.MONGO_URI;
+    if (!uri) {
+        console.error('CRITICAL: MONGO_URI is not defined');
+        throw new Error('MONGO_URI is missing in Vercel environment variables');
     }
+
+    // Mask URI for logs: mongodb+srv://user:****@cluster...
+    const maskedUri = uri.replace(/:([^:@]+)@/, ':****@');
+    console.log(`Connecting to MongoDB Atlas... (${maskedUri.substring(0, 30)}...)`);
+
     try {
-        const db = await mongoose.connect(process.env.MONGO_URI);
+        const db = await mongoose.connect(uri);
         isConnected = db.connections[0].readyState;
-        console.log('MongoDB Connected');
+        console.log('Successfully connected to MongoDB Atlas');
     } catch (err) {
-        console.error('MongoDB Connection Error:', err);
-        throw err; // Re-throw so middleware catches it
+        console.error('Atlas connection failed:', err.message);
+        throw err;
     }
 };
 
