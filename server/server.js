@@ -68,6 +68,10 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Social App API is running' });
 });
 
+app.get('/', (req, res) => {
+    res.json({ status: 'ok', message: 'Mini Social App Backend' });
+});
+
 // For local development
 if (process.env.NODE_ENV !== 'production' && require.main === module) {
     const PORT = process.env.PORT || 5000;
