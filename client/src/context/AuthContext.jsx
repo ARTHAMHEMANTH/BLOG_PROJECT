@@ -43,7 +43,12 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(userData));
             return { success: true };
         } catch (error) {
-            return { success: false, message: error.response?.data?.msg || 'Login failed' };
+            const serverMsg = error.response?.data?.msg;
+            const detail = error.response?.data?.error;
+            return {
+                success: false,
+                message: detail ? `${serverMsg}: ${detail}` : (serverMsg || 'Login failed')
+            };
         }
     };
 
@@ -59,7 +64,12 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(userData));
             return { success: true };
         } catch (error) {
-            return { success: false, message: error.response?.data?.msg || 'Signup failed' };
+            const serverMsg = error.response?.data?.msg;
+            const detail = error.response?.data?.error;
+            return {
+                success: false,
+                message: detail ? `${serverMsg}: ${detail}` : (serverMsg || 'Signup failed')
+            };
         }
     };
 
