@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: '*' })); // Allow all origins for split frontend/backend deployment
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
