@@ -59,17 +59,41 @@ app.use(async (req, res, next) => {
     }
 });
 
-// Routes
+// Routes - Mount both with and without /api prefix for flexibility
 app.use('/api/auth', require('./routes/auth'));
+app.use('/auth', require('./routes/auth'));
+
 app.use('/api/posts', require('./routes/posts'));
+app.use('/posts', require('./routes/posts'));
+
 app.use('/api/users', require('./routes/users'));
+app.use('/users', require('./routes/users'));
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Social App API is running' });
 });
 
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', message: 'Social App API is running' });
+});
+
 app.get('/', (req, res) => {
-    res.json({ status: 'ok', message: 'Mini Social App Backend' });
+    res.json({
+        status: 'ok',
+        message: 'Mini Social App Backend',
+        endpoints: ['/auth/signup', '/auth/login', '/posts', '/users']
+    });
+});
+
+// Custom 404 for debugging
+app.use((req, res) => {
+    console.log(`404 Not Found: ${req.method} ${req.url}`);
+    res.status(404).json({
+        msg: 'Route not found',
+        path: req.url,
+        method: req.method,
+        tip: 'Ensure your VITE_API_URL is correct'
+    });
 });
 
 // For local development
