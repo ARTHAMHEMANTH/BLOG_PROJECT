@@ -42,7 +42,12 @@ app.use(async (req, res, next) => {
         next();
     } catch (err) {
         console.error("DB Middleware Error:", err);
-        res.status(500).json({ msg: 'Database connection failed', error: err.message });
+        // Include the error message in the response for debugging
+        res.status(500).json({
+            msg: 'Database connection failed',
+            error: err.message,
+            tip: 'Check your Vercel Environment Variables and MongoDB IP Whitelist'
+        });
     }
 });
 
